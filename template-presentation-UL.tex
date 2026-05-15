@@ -1,0 +1,233 @@
+%%% beamer-academic-template.tex ---
+%%
+%% Filename:    beamer-academic-template.tex
+%% Description: 中文友好的学术 Beamer 模板,带学术蓝色上标引用系统。
+%%              A Chinese-friendly Beamer template for academic
+%%              presentations, featuring a numbered superscript
+%%              citation system in academic blue.
+%%
+%% Compiler:    XeLaTeX  (必须用 XeLaTeX 编译以支持中文)
+%% Version:     1.0
+%%
+%% Author:      Jinming Hu  <hujinming@amss.ac.cn>
+%% Affiliation: Academy of Mathematics and Systems Science,
+%%              Chinese Academy of Sciences (AMSS, CAS)
+%%
+%% --- 分发清单 / Distribution -------------------------------------
+%% 使用本模板需要以下文件位于同一目录:
+%%   1) beamer-academic-template.tex   (本文件)
+%%   2) beamer_udl_theme.sty           (自定义颜色主题)
+%%   3) amss.{pdf,png,jpg}             (封面机构 Logo;可替换为自己的图)
+%% 系统字体要求(可在导言区按注释替换):
+%%   - Times New Roman   (英文)
+%%   - KaiTi             (中文楷体)
+%%
+%% --- 致谢 / Acknowledgements --------------------------------------
+%% 引用系统与整体结构受 Amine Najahi 的 UPVD beamer 主题启发
+%% (amine.najahi@univ-perp.fr, 2012, GPL v3)。
+%%
+%% --- 许可证 / License --------------------------------------------
+%% This program is free software; you can redistribute it and/or
+%% modify it under the terms of the GNU General Public License as
+%% published by the Free Software Foundation; either version 3, or
+%% (at your option) any later version. See <https://www.gnu.org/licenses/>.
+%%
+%% --- 免责声明 / Disclaimer ---------------------------------------
+%% 本模板按"原样"(AS IS)提供,不附带任何明示或暗示的担保。
+%% 在任何情况下,作者均不对因使用本模板而产生的任何索赔或损害负责。
+%% 使用者应自行确认有权使用其在演示文稿中加入的所有素材(包括
+%% 机构标识、字体与参考文献内容)。
+%%
+%% 注意:模板封面默认引用的 amss 图像仅为示例占位,使用者在公开
+%% 发布前应替换为自己有权使用的机构标识。
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[10pt,svgnames,serif]{beamer}
+
+%%%=============== 中文与字体设置 ===============================
+%% 必须使用 XeLaTeX 编译。若所在系统缺少下列字体,可改为本机已装的:
+%%   - Times New Roman 的替代:TeX Gyre Termes(免费,所有发行版自带)
+%%   - KaiTi 的替代:Kaiti SC (macOS) / FandolKai (跨平台,TeX Live 自带)
+\usepackage[UTF8, scheme=plain]{ctex}
+\usepackage{fontspec}
+\setmainfont{Times New Roman}   % 英文衬线字体
+\setsansfont{Times New Roman}   % Beamer 无衬线环境下的英文字体
+\setCJKmainfont{KaiTi}          % 中文衬线字体
+\setCJKsansfont{KaiTi}          % 中文无衬线字体(同样为楷体,保持一致)
+
+%%%=============== 基础宏包 =====================================
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{url}
+
+%%%=============== 数学宏包 =====================================
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+
+%%%=============== 表格宏包 =====================================
+\usepackage{booktabs}
+\usepackage{tabularx}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+
+%%%=============== 主题 =========================================
+\usetheme{CambridgeUS}
+\usepackage{beamer_udl_theme}              % 自定义颜色主题(随模板分发)
+\setbeamertemplate{navigation symbols}{}   % 隐藏右下角导航图标
+
+%%%=============== 引用系统(学术蓝色)==========================
+\definecolor{AcademicBlue}{RGB}{0, 0, 255}
+
+% 计数器:每个 section 开始时自动重置
+\newcounter{mycitecounter}
+\AtBeginSection{\setcounter{mycitecounter}{0}}
+
+% 正文上标引用: \upcite{key}
+\newcommand{\upcite}[1]{%
+  \textsuperscript{\textcolor{AcademicBlue}{[\ref{#1}]}}%
+}
+
+% 帧底部参考条目: \citeitem{label}{作者}{题目}{期刊}
+\newcommand{\citeitem}[4]{%
+  \refstepcounter{mycitecounter}\label{#1}%
+  {\scriptsize\color{AcademicBlue}%
+    [\themycitecounter] #2, ``#3,'' \textit{#4}.}\\[1pt]%
+}
+
+%%%=============== 用户配置区(按需修改)========================
+\title[Short Title]{Presentation Title}
+% \subtitle{Subtitle}
+
+% 方括号里的"短版本"用于底部栏,花括号里的完整版本用于标题页。
+% 若不写短版本,底部栏会显示完整内容(含邮箱),容易被截断。
+\author[Author]{Author Name \\ \medskip \small author@example.com}
+
+\institute[Short Inst.]{Institution / Affiliation}
+
+\date{\today}
+
+% Logo:替换为你自己的图片(放在与 .tex 同目录,文件名不必带扩展名)
+\titlegraphic{\includegraphics[height=1.5cm]{amss}}
+
+%%%=============== 正文 =========================================
+\begin{document}
+
+% 封面
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% 每个 section 开始时自动插入目录页
+\AtBeginSection[]{%
+  \begin{frame}
+    \frametitle{Outline}
+    \tableofcontents[currentsection,hideothersubsections]
+  \end{frame}
+}
+
+%%%--------------------------------------------------------------
+\section{Citation System}
+
+\begin{frame}[allowframebreaks]{In-text citation example}
+
+  本模板提供学术蓝色右上角引用样式,例如 \upcite{ref1} 与 \upcite{ref2}。
+  每进入新的 \texttt{\textbackslash section},编号自动重置为 1。
+
+  \vfill
+  \begin{minipage}[b]{\textwidth}
+    \raggedright
+    \rule{0.3\textwidth}{0.3pt}\\[2pt]
+    \citeitem{ref1}{A. Author}{Sample paper title}{Journal Name, Year}
+    \citeitem{ref2}{B. Author, C. Author}{Another sample title}{Conference, Year}
+  \end{minipage}
+
+\end{frame}
+
+%%%--------------------------------------------------------------
+\section{Theorems and Blocks}
+
+\begin{frame}{Definitions, theorems and proofs}
+
+  Beamer 内置 \texttt{definition}, \texttt{theorem}, \texttt{lemma},
+  \texttt{corollary}, \texttt{proof} 等环境,可直接使用。
+
+  \begin{definition}[Concept name]
+    一段定义文字。设 $f : X \to Y$ 为映射,$\dots$
+  \end{definition}
+
+  \begin{theorem}[Main result]
+    对任意 $x \in \mathbb{R}$,有 $x^2 \geq 0$,等号成立当且仅当 $x = 0$。
+  \end{theorem}
+
+  \begin{proof}
+    $x^2 = x \cdot x$,实数与自身相乘所得非负。\qedhere
+  \end{proof}
+
+\end{frame}
+
+\begin{frame}{Block environments}
+
+  Beamer 提供三种带颜色的内容块,分别用于普通说明、警示和示例。
+
+  \begin{block}{Standard block}
+    用于一般性结论、说明或概览。
+  \end{block}
+
+  \begin{alertblock}{Alert block}
+    用于强调需要注意的重点或限制条件。
+  \end{alertblock}
+
+  \begin{exampleblock}{Example block}
+    用于举例说明,通常呈现为绿色。
+  \end{exampleblock}
+
+\end{frame}
+
+%%%--------------------------------------------------------------
+\section{Tables}
+
+\begin{frame}{Table I: booktabs three-line table}
+
+  使用 \texttt{booktabs} 的 \verb|\toprule|, \verb|\midrule|,
+  \verb|\bottomrule| 制作干净的三线表。
+
+  \begin{table}[h]
+    \centering
+    \caption{Example three-line table.}
+    \begin{tabular}{lcc}
+      \toprule
+      Item & Value & Unit \\
+      \midrule
+      A & 1.23 & m \\
+      B & 4.56 & s \\
+      C & 7.89 & kg \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+
+\end{frame}
+
+\begin{frame}{Table II: tabularx with wrapping cells}
+
+  当列内容较长、需要按页面宽度自动换行时,使用 \texttt{tabularx}
+  环境配合自定义列类型 \texttt{L}(导言区已定义)。
+
+  \begin{table}[h]
+    \centering
+    \caption{Example table with wrapping description column.}
+    \begin{tabularx}{\textwidth}{l L}
+      \toprule
+      Topic & Description \\
+      \midrule
+      Item 1 & 较长的描述文字,会根据列宽自动换行,适合放置说明性内容。\\
+      Item 2 & 另一段较长的描述,同样会自动换行。\\
+      \bottomrule
+    \end{tabularx}
+  \end{table}
+
+\end{frame}
+
+\end{document}
+%%% beamer-academic-template.tex ends here
